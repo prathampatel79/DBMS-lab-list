@@ -1,0 +1,171 @@
+SQL> CREATE TABLE CLIENT
+  2  (   CLIENT_NO VARCHAR(5) PRIMARY KEY,
+  3       NAME VARCHAR2(20) NOT NULL,
+  4       ADDRESS VARCHAR2(25) NOT NULL,
+  5       STATE VARCHAR(10) NOT NULL,
+  6          BAL_DUE NUMBER(10,2) NOT NULL,
+  7    CHECK ( CLIENT_NO LIKE 'C%'));
+
+Table created.
+  
+ DESC CLIENT;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ CLIENT_NO                                             NOT NULL VARCHAR2(5)
+ NAME                                                  NOT NULL VARCHAR2(20)
+ ADDRESS                                               NOT NULL VARCHAR2(25)
+ STATE                                                 NOT NULL VARCHAR2(10)
+ BAL_DUE                                               NOT NULL NUMBER(10,2)
+  
+
+ INSERT INTO CLIENT VALUES(&CLIENT_NO,'&NAME','&ADDRESS','&STATE',BAL_DUE);
+SQL> SELECT * FROM CLIENT;
+
+CLIEN NAME                 ADDRESS                   STATE         BAL_DUE
+----- -------------------- ------------------------- ---------- ----------
+C1001 SWASTHIK             PATLA,UDUPI               KARNATAKA       21000
+C1002 MANISH               PADUBIDRI,UDUPI           KARNATAKA       18000
+C1003 JEEVAN               UDUPI                     KARNATAKA       16000
+C1004 PRASAD               MANIPAL                   KARNATAKA       19000
+C1005 DHANUSH              UDUPI                     KARNATAKA       20000
+C1006 ADITHYA              SHIRVA,UDUPI              KARNATAKA       14000
+C1007 PRANATH              MULKI,MANGLORE            KARNATAKA       17000
+C1008 YASHWITH             UCHILA,UDUPI              KARNATAKA       22000
+C1009 SAVIKIRAN            YERMAL,UDUPI              KARNATAKA       13000
+C1010 RAVI                 COIMBOTHUR                TAMIL NADU      13500
+
+10 rows selected.
+
+A:=
+
+SQL> CREATE TABLE CLIENT1
+  2  AS SELECT CLIENT_NO,NAME,BAL_DUE
+  3  FROM CLIENT
+  4  WHERE STATE='&STATE';
+Enter value for state: TAMIL NADU
+old   4: WHERE STATE='&STATE'
+new   4: WHERE STATE='TAMIL NADU'
+
+Table created.
+
+SQL> SELECT * FROM CLIENT1;
+
+CLIEN NAME                    BAL_DUE
+----- -------------------- ----------
+C1010 RAVI                      13500
+ 
+B:=
+
+SQL> CREATE TABLE CLIENT2
+  2  AS SELECT * FROM CLIENT
+  3  WHERE 1=2;
+
+Table created.
+ DESC CLIENT2;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ CLIENT_NO                                                      VARCHAR2(5)
+ NAME                                                  NOT NULL VARCHAR2(20)
+ ADDRESS                                               NOT NULL VARCHAR2(25)
+ STATE                                                 NOT NULL VARCHAR2(10)
+ BAL_DUE                                               NOT NULL NUMBER(10,2)
+
+c:=
+SQL> ALTER TABLE CLIENT
+  2  ADD ( PENALTY NUMBER(10,2));
+
+Table altered.
+ 
+D:=
+
+SQL> UPDATE CLIENT
+  2  SET PENALTY=0.1*BAL_DUE
+  3  WHERE CLIENT_NO='C1002'
+  4  OR
+  5  CLIENT_NO='C1005'
+  6  OR
+  7  CLIENT_NO='C1009';
+
+3 rows updated.
+
+SQL> SELECT * FROM CLIENT;
+
+CLIEN NAME                 ADDRESS                   STATE         BAL_DUE    PENALTY
+----- -------------------- ------------------------- ---------- ---------- ----------
+C1001 SWASTHIK             PATLA,UDUPI               KARNATAKA       21000
+C1002 MANISH               PADUBIDRI,UDUPI           KARNATAKA       18000       1800
+C1003 JEEVAN               UDUPI                     KARNATAKA       16000
+C1004 PRASAD               MANIPAL                   KARNATAKA       19000
+C1005 DHANUSH              UDUPI                     KARNATAKA       20000       2000
+C1006 ADITHYA              SHIRVA,UDUPI              KARNATAKA       14000
+C1007 PRANATH              MULKI,MANGLORE            KARNATAKA       17000
+C1008 YASHWITH             UCHILA,UDUPI              KARNATAKA       22000
+C1009 SAVIKIRAN            YERMAL,UDUPI              KARNATAKA       13000       1300
+C1010 RAVI                 COIMBOTHUR                TAMIL NADU      13500
+
+10 rows selected.
+
+
+SQL> UPDATE CLIENT
+  2  SET PENALTY=0.08*BAL_DUE
+  3  WHERE CLIENT_NO NOT IN('C1002','C1005','C1009');
+
+7 rows updated.
+
+SQL> SELECT * FROM CLIENT;
+
+CLIEN NAME                 ADDRESS                   STATE         BAL_DUE    PENALTY
+----- -------------------- ------------------------- ---------- ---------- ----------
+C1001 SWASTHIK             PATLA,UDUPI               KARNATAKA       21000       1680
+C1002 MANISH               PADUBIDRI,UDUPI           KARNATAKA       18000       1800
+C1003 JEEVAN               UDUPI                     KARNATAKA       16000       1280
+C1004 PRASAD               MANIPAL                   KARNATAKA       19000       1520
+C1005 DHANUSH              UDUPI                     KARNATAKA       20000       2000
+C1006 ADITHYA              SHIRVA,UDUPI              KARNATAKA       14000       1120
+C1007 PRANATH              MULKI,MANGLORE            KARNATAKA       17000       1360
+C1008 YASHWITH             UCHILA,UDUPI              KARNATAKA       22000       1760
+C1009 SAVIKIRAN            YERMAL,UDUPI              KARNATAKA       13000       1300
+C1010 RAVI                 COIMBOTHUR                TAMIL NADU      13500       1080
+
+10 rows selected.
+
+E:=
+
+SQL> RENAME CLIENT TO NEW_CLIENT;
+
+Table renamed.
+
+SQL>  SELECT * FROM NEW_CLIENT;
+
+CLIEN NAME                 ADDRESS                   STATE         BAL_DUE    PENALTY
+----- -------------------- ------------------------- ---------- ---------- ----------
+C1001 SWASTHIK             PATLA,UDUPI               KARNATAKA       21000       1680
+C1002 MANISH               PADUBIDRI,UDUPI           KARNATAKA       18000       1800
+C1003 JEEVAN               UDUPI                     KARNATAKA       16000       1280
+C1004 PRASAD               MANIPAL                   KARNATAKA       19000       1520
+C1005 DHANUSH              UDUPI                     KARNATAKA       20000       2000
+C1006 ADITHYA              SHIRVA,UDUPI              KARNATAKA       14000       1120
+C1007 PRANATH              MULKI,MANGLORE            KARNATAKA       17000       1360
+C1008 YASHWITH             UCHILA,UDUPI              KARNATAKA       22000       1760
+C1009 SAVIKIRAN            YERMAL,UDUPI              KARNATAKA       13000       1300
+C1010 RAVI                 COIMBOTHUR                TAMIL NADU      13500       1080
+
+10 rows selected.
+
+f:=
+
+> DROP TABLE CLIENT2;
+
+Table dropped.
+
+SQL> DESC CLIENT2;
+ERROR:
+ORA-04043: object CLIENT2 does not exist
+
+SQL> SELECT * FROM CLIENT2;
+SELECT * FROM CLIENT2
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
