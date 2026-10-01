@@ -1,0 +1,234 @@
+  
+
+   CREATE TABLE SALES_DETAILS
+   (
+        SNO VARCHAR2(5),
+        MONTH VARCHAR2(15),
+        TARGET NUMBER(8),
+        QTY_SOLD NUMBER(10),
+        CHECK (TARGET>0),
+        CHECK (QTY_SOLD>0),
+        CONSTRAINT PK_SALES_DETAILS PRIMARY KEY(SNO,MONTH)   
+   );
+
+ Table created.
+
+
+    
+ > DESC SALES_DETAILS;
+
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ SNO                                                   NOT NULL VARCHAR2(5)
+ MONTH                                                 NOT NULL VARCHAR2(15)
+ TARGET                                                         NUMBER(8)
+ QTY_SOLD                                                       NUMBER(10)
+
+
+
+
+SQL> INSERT INTO SALES_DETAILS VALUES (&SNO,'&MONTH',&TARGET,&QTY_SOLD);
+Enter value for sno: S1001
+Enter value for month: APRIL
+Enter value for target: 25
+Enter value for qty_sold: 30
+old   1: INSERT INTO SALES_DETAILS VALUES (&SNO,'&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES (S1001,'APRIL',25,30)
+INSERT INTO SALES_DETAILS VALUES (S1001,'APRIL',25,30)
+                                  *
+ERROR at line 1:
+ORA-00984: column not allowed here
+
+
+SQL> INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD);
+Enter value for sno: S1001
+Enter value for month: APRIL
+Enter value for target: 25
+Enter value for qty_sold: 30
+old   1: INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES ('S1001','APRIL',25,30)
+
+1 row created.
+
+SQL> /
+Enter value for sno: S1001
+Enter value for month: JANUARY
+Enter value for target: 20
+Enter value for qty_sold: 21
+old   1: INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES ('S1001','JANUARY',20,21)
+
+1 row created.
+
+SQL> /
+Enter value for sno: S1002
+Enter value for month: DECEMBER
+Enter value for target: 35
+Enter value for qty_sold: 29
+old   1: INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES ('S1002','DECEMBER',35,29)
+
+1 row created.
+
+SQL> /
+Enter value for sno: S1002
+Enter value for month: AUGUST
+Enter value for target: 25
+Enter value for qty_sold: 28
+old   1: INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES ('S1002','AUGUST',25,28)
+
+1 row created.
+
+ INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD);
+Enter value for sno: S1003
+Enter value for month:  MARCH
+Enter value for target: 45
+Enter value for qty_sold: 55
+old   1: INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES ('S1003',' MARCH',45,55)
+
+1 row created.
+
+SQL> /
+Enter value for sno: S1003
+Enter value for month: SEPTEMBER
+Enter value for target: 40
+Enter value for qty_sold: 37
+old   1: INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES ('S1003','SEPTEMBER',40,37)
+
+1 row created.
+
+SQL> /
+Enter value for sno: S1004
+Enter value for month: APRIL
+Enter value for target: 55
+Enter value for qty_sold: 60
+old   1: INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES ('S1004','APRIL',55,60)
+
+1 row created.
+
+SQL> /
+Enter value for sno: S1004
+Enter value for month: APRIL
+Enter value for target: 6
+Enter value for qty_sold: 6
+old   1: INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES ('S1004','APRIL',6,6)
+INSERT INTO SALES_DETAILS VALUES ('S1004','APRIL',6,6)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (BCAS68.PK_SALES_DETAILS) violated
+
+
+SQL> /
+Enter value for sno: S1005
+Enter value for month: JUNE
+Enter value for target: 30
+Enter value for qty_sold: 26
+old   1: INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES ('S1005','JUNE',30,26)
+
+1 row created.
+
+SQL> /
+Enter value for sno: S1005
+Enter value for month: NOVEMBER
+Enter value for target: 45
+Enter value for qty_sold: 49
+old   1: INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES ('S1005','NOVEMBER',45,49)
+
+1 row created.
+
+SQL> /
+Enter value for sno: S1005
+Enter value for month: AUGUST
+Enter value for target: 35
+Enter value for qty_sold: 32
+old   1: INSERT INTO SALES_DETAILS VALUES ('&SNO','&MONTH',&TARGET,&QTY_SOLD)
+new   1: INSERT INTO SALES_DETAILS VALUES ('S1005','AUGUST',35,32)
+
+1 row created.
+
+
+ > SELECT * FROM SALES_DETAILS;
+
+SNO   MONTH               TARGET   QTY_SOLD
+----- --------------- ---------- ----------
+S1001 APRIL                   25         30
+S1001 JANUARY                 20         21
+S1002 DECEMBER                35         29
+S1002 AUGUST                  25         28
+S1003  MARCH                  45         55
+S1003 SEPTEMBER               40         37
+S1004 APRIL                   55         50
+S1005 JUNE                    30         26
+S1005 NOVEMBER                45         49
+S1005 AUGUST                  35         32
+
+10 rows selected.
+
+
+A:=
+
+ SELECT SNO,SUM(QTY_SOLD) AS TOTAL_SALES
+ FROM SALES_DETAILS
+ WHERE QTY_SOLD>=TARGET
+ GROUP BY SNO;
+
+SNO   TOTAL_SALES
+----- -----------
+S1001          51
+S1002          28
+S1003          55
+S1005          49
+
+
+B:=
+   
+   SELECT SNO,SUM((QTY_SOLD-TARGET)*50) AS TOTAL_COMMISSION
+   FROM SALES_DETAILS
+   WHERE QTY_SOLD>=TARGET
+   GROUP BY SNO;
+    
+    
+SNO   TOTAL_COMMISSION
+----- ----------------
+S1001              300
+S1002              150
+S1003              500
+S1005              200
+
+C:=
+ 
+
+   SELECT DISTINCT SNO FROM SALES_DETAILS
+   WHERE SNO NOT IN
+       (    SELECT SNO FROM SALES_DETAILS
+            WHERE QTY_SOLD>=TARGET);
+   
+  SNO
+-----
+S1004
+
+
+D:=
+
+
+  SELECT SNO, MONTH ,QTY_SOLD
+  FROM SALES_DETAILS
+  WHERE SNO IN('S1001','S1003');
+ 
+SNO   MONTH             QTY_SOLD
+----- --------------- ----------
+S1001 APRIL                   30
+S1001 JANUARY                 21
+S1003  MARCH                  55
+S1003 SEPTEMBER               37
+
+
+
+
