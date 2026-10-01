@@ -1,0 +1,170 @@
+ CREATE TABLE EMPLOY
+   (
+    EMPNO NUMBER(3) PRIMARY KEY,
+    NAME VARCHAR2(15) NOT NULL,
+    DESIGNATION VARCHAR(20) NOT NULL,
+    DEPARTMENT VARCHAR(20) NOT NULL,
+    GENDER CHAR(1) NOT NULL,
+    SALARY NUMBER(10,2) NOT NULL,
+    CHECK(GENDER IN ('M','F')),
+    CHECK(DEPARTMENT IN ('SALES','ACCOUNTS','IT')),
+    CHECK(
+          (DEPARTMENT='SALES' AND DESIGNATION IN('CLERK','MANAGER','SUPERVISOR'))
+           OR
+          (DEPARTMENT='ACCOUNTS' AND DESIGNATION IN('ACCOUNTANT','MANAGER','SUPERVISOR'))
+           OR
+          (DEPARTMENT='IT' AND DESIGNATION IN('ANALYST','MANAGER','SUPERVISOR'))   
+    )
+)
+   );
+ Table created.
+  
+
+SQL> DESC EMPLOYEE
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                     NOT NULL NUMBER(3)
+ NAME                                      NOT NULL VARCHAR2(15)
+ DESIGNATION                               NOT NULL VARCHAR2(20)
+ DEPARTMENT                                NOT NULL VARCHAR2(20)
+ GENDER                                    NOT NULL CHAR(1)
+ SALARY                                    NOT NULL NUMBER(10,2)
+
+
+INSERT INTO EMPLOYEE VALUES(&EMPNO,'&NAME','&DESIGNATION','&DEPARTMENT','&GENDER',&SALARY);
+Enter value for empno: 102
+Enter value for name: SWASTHIK
+Enter value for designation: SUPERVISOR
+Enter value for department: IT
+Enter value for gender: M
+Enter value for salary: 35000
+old   1: INSERT INTO EMPLOYEE VALUES(&EMPNO,'&NAME','&DESIGNATION','&DEPARTMENT','&GENDER',&SALARY)
+new   1: INSERT INTO EMPLOYEE VALUES(102,'SWASTHIK','SUPERVISOR','IT','M',35000)
+
+
+ SELECT * FROM EMPLOYEE;
+
+     EMPNO NAME            DESIGNATION          DEPARTMENT           G     SALARY
+---------- --------------- -------------------- -------------------- - ----------
+       101 MANISH          MANAGER              IT                   M      45000
+       102 SWASTHIK        SUPERVISOR           IT                   M      35000
+       103 ANUSH           CLERK                SALES                M      10000
+       104 NAVEEN RAJ      ANALYST              IT                   M      30000
+       105 JEEVAN          ACCOUNTANT           ACCOUNTS             M      25000
+       106 PRASAD          MANAGER              SALES                M      40000
+       107 DISHA           MANAGER              ACCOUNTS             F      25000
+       108 VANITHA         SUPERVISOR           SALES                F      27000
+       109 JANAKI          ANALYST              IT                   F      38000
+       110 SURAJ           SUPERVISOR           ACCOUNTS             M      30000
+
+10 rows selected.
+
+A:=
+
+SQL> SELECT EMPNO,NAME,DESIGNATION FROM EMPLOYEE
+  2       WHERE NAME LIKE '%RAJ';
+
+     EMPNO NAME            DESIGNATION
+---------- --------------- --------------------
+       104 NAVEEN RAJ      ANALYST
+       110 SURAJ           SUPERVISOR
+B:=
+
+SQL> SELECT * FROM EMPLOYEE
+  2       WHERE GENDER='F'
+  3       AND SALARY BETWEEN 20000 AND 40000
+  4       AND DEPARTMENT IN('SALES','IT');
+
+     EMPNO NAME            DESIGNATION          DEPARTMENT           G     SALARY
+---------- --------------- -------------------- -------------------- - ----------
+       108 VANITHA         SUPERVISOR           SALES                F      27000
+       109 JANAKI          ANALYST              IT                   F      38000
+
+C:=
+
+SQL> SELECT DISTINCT DEPARTMENT,DESIGNATION
+  2      FROM EMPLOYEE
+  3      ORDER BY DEPARTMENT,DESIGNATION;
+
+DEPARTMENT           DESIGNATION
+-------------------- --------------------
+ACCOUNTS             ACCOUNTANT
+ACCOUNTS             MANAGER
+ACCOUNTS             SUPERVISOR
+IT                   ANALYST
+IT                   MANAGER
+IT                   SUPERVISOR
+SALES                CLERK
+SALES                MANAGER
+SALES                SUPERVISOR
+
+9 rows selected.
+
+D:=
+
+SQL> SELECT DEPARTMENT ,
+  2       SUM(SALARY) AS TOTAL_SALARY,
+  3       AVG(SALARY) AS  AVERAGE_SALARY,
+  4       MAX(SALARY) AS  MAXIMUM_SALARY,
+  5       MIN(SALARY) AS MINIMUM_SALARY
+  6       FROM EMPLOYEE
+  7       GROUP BY DEPARTMENT
+  8       HAVING SUM(SALARY)>30000;
+
+DEPARTMENT           TOTAL_SALARY AVERAGE_SALARY MAXIMUM_SALARY MINIMUM_SALARY
+-------------------- ------------ -------------- -------------- --------------
+IT                         148000          37000          45000          30000
+ACCOUNTS                    80000     26666.6667          30000          25000
+SALES                       77000     25666.6667          40000          10000
+
+
+E:=
+
+
+SQL> SELECT DEPARTMENT,
+  2       COUNT(*) AS NO_OF_EMPLOYEES
+  3       FROM EMPLOYEE
+  4       GROUP BY DEPARTMENT
+  5       HAVING COUNT(*)>2;
+
+DEPARTMENT           NO_OF_EMPLOYEES
+-------------------- ---------------
+IT                                 4
+ACCOUNTS                           3
+SALES                              3
+
+SQL>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
