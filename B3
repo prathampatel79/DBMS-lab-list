@@ -1,0 +1,124 @@
+ CREATE TABLE BOOK
+    ( ACCESSION_NO NUMBER(10) ,
+     TITLE VARCHAR2(20)  NOT NULL,
+     AUTHOR  VARCHAR2(20) NOT NULL,
+    PUBLISHER VARCHAR2(20) NOT NULL,
+   YEAR NUMBER(4) NOT NULL,
+   PRICE NUMBER(10,2) NOT NULL,
+   CONSTRAINT PK_BOOK PRIMARY KEY(ACCESSION_NO)
+   );
+
+SQL> DESC BOOK
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ACCESSION_NO                              NOT NULL NUMBER(10)
+ TITLE                                     NOT NULL VARCHAR2(20)
+ AUTHOR                                    NOT NULL VARCHAR2(20)
+ PUBLISHER                                 NOT NULL VARCHAR2(20)
+ YEAR                                      NOT NULL NUMBER(4)
+ PRICE                                     NOT NULL NUMBER(10,2)
+  
+
+SQL> SELECT * FROM BOOK;
+
+ACCESSION_NO TITLE                AUTHOR               PUBLISHER         YEAR       PRICE
+------------ -------------------- -------------------- -------------------- ---------- ----------
+         101 PROGRAMMING IN C     BALAGURUSWAMY        PEARSON           1988         450
+         102 DATABASE SYSTEM      ABRAHAM              MCGRAW HILL       2005         650
+         103 JAVA                 HERBERT              ORACLE PRESS      2012         700
+         104 OPERATING SYSTEM     ABRAHAM              WILEY             2008         550
+         105 COMPUTER NETWORK     ANDREW S             PEARSON           2010         800
+         106 DATA STRUCTURES      REEMA THAREJA        OXFORD            2016         500
+         107 PYTHON PROGRAMMING   JOHN M               MICROSOFT PRESS   2018         600
+         108 SOFTWARE ENGINEERING ROGER S              MCGRAW HILL       2003         700
+         109 SQL FUNDAMENTALS     JOHN J               PACKT             2015         500
+         110 INTERNET AND WWW     HARVEY               PEARSON           2009         680
+
+10 rows selected.
+
+A:= 
+
+SQL> SELECT * FROM BOOK
+  2  WHERE PUBLISHER LIKE'_A%';
+
+ACCESSION_NO TITLE                AUTHOR               PUBLISHER         YEAR       PRICE
+------------ -------------------- -------------------- -------------------- ---------- ----------
+         109 SQL FUNDAMENTALS     JOHN J               PACKT             2015         500
+
+
+B:=
+
+SQL> SELECT ACCESSION_NO,TITLE,PUBLISHER,YEAR FROM BOOK
+  2  WHERE AUTHOR ='&AUTHOR'
+  3  AND YEAR< 2010
+  4  ORDER BY YEAR DESC;
+Enter value for author: ABRAHAM
+old   2: WHERE AUTHOR ='&AUTHOR'
+new   2: WHERE AUTHOR ='ABRAHAM'
+
+ACCESSION_NO TITLE                PUBLISHER                  YEAR
+------------ -------------------- -------------------- ----------
+         104 OPERATING SYSTEM     WILEY                      2008
+         102 DATABASE SYSTEM      MCGRAW HILL                2005
+C:=
+
+SQL> ALTER TABLE BOOK
+  2  MODIFY( TITLE VARCHAR2(25));
+
+Table altered.
+
+SQL>  DESC BOOK;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ ACCESSION_NO                                          NOT NULL NUMBER(10)
+ TITLE                                                 NOT NULL VARCHAR2(25)
+ AUTHOR                                                NOT NULL VARCHAR2(20)
+ PUBLISHER                                             NOT NULL VARCHAR2(20)
+ YEAR                                                  NOT NULL NUMBER(4)
+ PRICE                                                 NOT NULL NUMBER(10,2)
+
+D:=
+
+SQL> SELECT * FROM BOOK
+  2  WHERE PUBLISHER!='MICROSOFT PRESS';
+
+ACCESSION_NO TITLE                     AUTHOR               PUBLISHER                  YEAR      PRICE
+------------ ------------------------- -------------------- -------------------- ---------- ----------
+         101 PROGRAMMING IN C          BALAGURUSWAMY        PEARSON                    1988        450
+         102 DATABASE SYSTEM           ABRAHAM              MCGRAW HILL                2005        650
+         103 JAVA                      HERBERT              ORACLE PRESS               2012        700
+         104 OPERATING SYSTEM          ABRAHAM              WILEY                      2008        550
+         105 COMPUTER NETWORK          ANDREW S             PEARSON                    2010        800
+         106 DATA STRUCTURES           REEMA THAREJA        OXFORD                     2016        500
+         108 SOFTWARE ENGINEERING      ROGER S              MCGRAW HILL                2003        700
+         109 SQL FUNDAMENTALS          JOHN J               PACKT                      2015        500
+         110 INTERNET AND WWW          HARVEY               PEARSON                    2009        680
+
+9 rows selected.
+
+E:=
+
+SQL> DELETE FROM BOOK
+  2  WHERE YEAR<1990;
+
+1 row deleted.
+
+SQL> SELECT * FROM BOOK;
+
+ACCESSION_NO TITLE                     AUTHOR               PUBLISHER                  YEAR      PRICE
+------------ ------------------------- -------------------- -------------------- ---------- ----------
+         102 DATABASE SYSTEM           ABRAHAM              MCGRAW HILL                2005        650
+         103 JAVA                      HERBERT              ORACLE PRESS               2012        700
+         104 OPERATING SYSTEM          ABRAHAM              WILEY                      2008        550
+         105 COMPUTER NETWORK          ANDREW S             PEARSON                    2010        800
+         106 DATA STRUCTURES           REEMA THAREJA        OXFORD                     2016        500
+         107 PYTHON PROGRAMMING        JOHN M               MICROSOFT PRESS            2018        600
+         108 SOFTWARE ENGINEERING      ROGER S              MCGRAW HILL                2003        700
+         109 SQL FUNDAMENTALS          JOHN J               PACKT                      2015        500
+         110 INTERNET AND WWW          HARVEY               PEARSON                    2009        680
+
+9 rows selected.
+
+SQL> COMMIT;
+
+Commit complete.
