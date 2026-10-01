@@ -1,0 +1,177 @@
+ CREATE TABLE SALES
+  (
+       SNO NUMBER(3),
+       SNAME VARCHAR2(15) NOT NULL,
+       MNO NUMBER(3),
+       JOIN_DATE DATE NOT NULL,
+       DATE_BIRTH DATE NOT NULL,
+       SALARY NUMBER(8,2) NOT NULL,
+       SALES_AMOUNT NUMBER(8,2)NOT NULL,
+       COMMISSION NUMBER(8,2) DEFAULT 0,
+       CONSTRAINT PK_SALES PRIMARY KEY(SNO),
+       CONSTRAINT FK_MANAGER FOREIGN KEY(MNO)
+       REFERENCES SALES(SNO),
+       CONSTRAINT CHK_AGE
+       CHECK(MONTHS_BETWEEN(JOIN_DATE,DATE_BIRTH)/12>=18)
+  );
+
+Table created 
+
+SET LINES 100;
+SQL> DESC SALES;
+ Name                                                  Null?    Type
+ ----------------------------------------------------- -------- ------------------------------------
+ SNO                                                   NOT NULL NUMBER(3)
+ SNAME                                                 NOT NULL VARCHAR2(15)
+ MNO                                                            NUMBER(3)
+ JOIN_DATE                                             NOT NULL DATE
+ DATE_BIRTH                                            NOT NULL DATE
+ SALARY                                                NOT NULL NUMBER(8,2)
+ SALES_AMOUNT                                          NOT NULL NUMBER(8,2)
+ COMMISSION                                                     NUMBER(8,2)
+
+
+
+
+SQL> INSERT INTO SALES (SNO,SNAME,MNO,JOIN_DATE,DATE_BIRTH,SALARY,SALES_AMOUNT) VALUES (101,'RAVI',NULL,DATE '2015-5-15',DATE '1992-8-23' ,45000,25000);
+
+1 row created.
+
+
+
+
+SQL> SET LINES 1000;
+SQL> SELECT * FROM SALES;
+
+       SNO SNAME                  MNO JOIN_DATE DATE_BIRT     SALARY SALES_AMOUNT COMMISSION
+---------- --------------- ---------- --------- --------- ---------- ------------ ----------
+       101 RAVI                       15-MAY-15 23-AUG-92      45000        25000          0
+
+SQL> INSERT INTO SALES (SNO,SNAME,MNO,JOIN_DATE,DATE_BIRTH,SALARY,SALES_AMOUNT) VALUES (102,'ANUSH',101,DATE '2013-4-7',DATE '1989-2-21' ,40000,23000);
+
+1 row created.
+
+
+SQL> INSERT INTO SALES (SNO,SNAME,MNO,JOIN_DATE,DATE_BIRTH,SALARY,SALES_AMOUNT) VALUES (103,'SWASTHIK',102,DATE '2018-9-16',DATE '1997-4-17' ,35000,19000);
+
+1 row created.
+
+
+
+SQL> INSERT INTO SALES (SNO,SNAME,MNO,JOIN_DATE,DATE_BIRTH,SALARY,SALES_AMOUNT) VALUES (104,'JEEVAN',103,DATE '2015-1-30',DATE '1992-8-11' ,42000,24000);
+
+1 row created.
+
+
+
+SQL> INSERT INTO SALES (SNO,SNAME,MNO,JOIN_DATE,DATE_BIRTH,SALARY,SALES_AMOUNT) VALUES (105,'PRASAD',104,DATE '2010-7-6',DATE '1985-10-12' ,34000,18000);
+
+1 row created.
+
+SQL> INSERT INTO SALES (SNO,SNAME,MNO,JOIN_DATE,DATE_BIRTH,SALARY,SALES_AMOUNT) VALUES (106,'DHANUSH',105,DATE '2020-12-19',DATE '1996-3-9' ,50000,27000);
+
+1 row created.
+
+SQL> INSERT INTO SALES (SNO,SNAME,MNO,JOIN_DATE,DATE_BIRTH,SALARY,SALES_AMOUNT) VALUES (107,'SHREYAS',106,DATE '2019-1-9',DATE '1998-7-12' ,46000,17000);
+
+1 row created.
+
+SQL> INSERT INTO SALES (SNO,SNAME,MNO,JOIN_DATE,DATE_BIRTH,SALARY,SALES_AMOUNT) VALUES (108,'NAVEEN',107,DATE '2011-11-6',DATE '1989-12-3' ,40000,21000);
+
+1 row created.
+
+SQL> INSERT INTO SALES (SNO,SNAME,MNO,JOIN_DATE,DATE_BIRTH,SALARY,SALES_AMOUNT) VALUES (109,'ADITHYA',108,DATE '2016-10-27',DATE '1991-9-7' ,55000,35000);
+
+1 row created.
+
+SQL> INSERT INTO SALES (SNO,SNAME,MNO,JOIN_DATE,DATE_BIRTH,SALARY,SALES_AMOUNT) VALUES (110,'PRATHEEK',NULL,DATE '2019-8-13',DATE '1994-7-18' ,51000,31000);
+
+1 row created.
+
+SQL> SELECT * FROM SALES
+  2  ;
+
+       SNO SNAME                  MNO JOIN_DATE DATE_BIRT     SALARY SALES_AMOUNT COMMISSION
+---------- --------------- ---------- --------- --------- ---------- ------------ ----------
+       101 RAVI                       15-MAY-15 23-AUG-92      45000        25000          0
+       102 ANUSH                  101 07-APR-13 21-FEB-89      40000        23000          0
+       103 SWASTHIK               102 16-SEP-18 17-APR-97      35000        19000          0
+       104 JEEVAN                 103 30-JAN-15 11-AUG-92      42000        24000          0
+       105 PRASAD                 104 06-JUL-10 12-OCT-85      34000        18000          0
+       106 DHANUSH                105 19-DEC-20 09-MAR-96      50000        27000          0
+       107 SHREYAS                106 09-JAN-19 12-JUL-98      46000        17000          0
+       108 NAVEEN                 107 06-NOV-11 03-DEC-89      40000        21000          0
+       109 ADITHYA                108 27-OCT-16 07-SEP-91      55000        35000          0
+       110 PRATHEEK                   13-AUG-19 18-JUL-94      51000        31000          0
+
+10 rows selected.
+
+A:=
+     
+    SELECT * FROM SALES
+     WHERE SALARY>
+    ( SELECT AVG(SALARY) FROM SALES);
+
+       SNO SNAME                  MNO JOIN_DATE DATE_BIRT     SALARY SALES_AMOUNT COMMISSION
+---------- --------------- ---------- --------- --------- ---------- ------------ ----------
+       101 RAVI                       15-MAY-15 23-AUG-92      45000        25000          0
+       106 DHANUSH                105 19-DEC-20 09-MAR-96      50000        27000          0
+       107 SHREYAS                106 09-JAN-19 12-JUL-98      46000        17000          0
+       109 ADITHYA                108 27-OCT-16 07-SEP-91      55000        35000          0
+       110 PRATHEEK                   13-AUG-19 18-JUL-94      51000        31000          0
+
+
+B:=  
+    
+     UPDATE SALES
+     SET COMMISSION=0.2*SALES_AMOUNT;
+
+10 rows updated.
+ 
+SQL> SELECT * FROM SALES;
+
+       SNO SNAME                  MNO JOIN_DATE DATE_BIRT     SALARY SALES_AMOUNT COMMISSION
+---------- --------------- ---------- --------- --------- ---------- ------------ ----------
+       101 RAVI                       15-MAY-15 23-AUG-92      45000        25000       5000
+       102 ANUSH                  101 07-APR-13 21-FEB-89      40000        23000       4600
+       103 SWASTHIK               102 16-SEP-18 17-APR-97      35000        19000       3800
+       104 JEEVAN                 103 30-JAN-15 11-AUG-92      42000        24000       4800
+       105 PRASAD                 104 06-JUL-10 12-OCT-85      34000        18000       3600
+       106 DHANUSH                105 19-DEC-20 09-MAR-96      50000        27000       5400
+       107 SHREYAS                106 09-JAN-19 12-JUL-98      46000        17000       3400
+       108 NAVEEN                 107 06-NOV-11 03-DEC-89      40000        21000       4200
+       109 ADITHYA                108 27-OCT-16 07-SEP-91      55000        35000       7000
+       110 PRATHEEK                   13-AUG-19 18-JUL-94      51000        31000       6200
+
+c:=
+     SELECT E.SNO,
+           E.SNAME,
+           E.MNO,
+           E.SALARY,
+           E.COMMISSION,
+           M.SALARY AS MANAGER_SALARY
+    FROM SALES E
+    JOIN SALES M
+    ON E.MNO=M.SNO
+    WHERE(E.SALARY+E.COMMISSION)>
+    M.SALARY;
+
+       SNO SNAME                  MNO     SALARY COMMISSION MANAGER_SALARY
+---------- --------------- ---------- ---------- ---------- --------------
+       104 JEEVAN                 103      42000       4800          35000
+       106 DHANUSH                105      50000       5400          34000
+       109 ADITHYA                108      55000       7000          40000
+
+D:=
+
+SELECT * FROM SALES
+ WHERE MONTHS_BETWEEN(SYSDATE,JOIN_DATE)>=120;
+
+       SNO SNAME                  MNO JOIN_DATE DATE_BIRT     SALARY SALES_AMOUNT COMMISSION
+---------- --------------- ---------- --------- --------- ---------- ------------ ----------
+       101 RAVI                       15-MAY-15 23-AUG-92      45000        25000       5000
+       102 ANUSH                  101 07-APR-13 21-FEB-89      40000        23000       4600
+       104 JEEVAN                 103 30-JAN-15 11-AUG-92      42000        24000       4800
+       105 PRASAD                 104 06-JUL-10 12-OCT-85      34000        18000       3600
+       108 NAVEEN                 107 06-NOV-11 03-DEC-89      40000        21000       4200
+
