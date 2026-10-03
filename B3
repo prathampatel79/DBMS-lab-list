@@ -1,0 +1,66 @@
+SET SERVEROUTPUT ON;
+
+DECLARE 
+    CURSOR C_BOOK IS 
+        SELECT BCODE, AUTHOR, TITLE, CATEGORY, PRICE 
+        FROM BOOK;
+
+    V_BOOK_CODE       BOOK.BCODE%TYPE;
+    V_BOOK_AUTHOR     BOOK.AUTHOR%TYPE;
+    V_BOOK_TITLE      BOOK.TITLE%TYPE;
+    V_BOOK_CATEGORY   BOOK.CATEGORY%TYPE;
+    V_BOOK_PRICE      BOOK.PRICE%TYPE;
+    V_DISCOUNT        NUMBER(8,2);
+    V_SELLING_PRICE   NUMBER(8,2);
+BEGIN
+    DBMS_OUTPUT.PUT_LINE(
+        RPAD('CODE', 6) ||
+        RPAD('AUTHOR', 18) ||
+        RPAD('TITLE', 20) ||
+        RPAD('CATEGORY', 14) ||
+        LPAD('PRICE', 10) ||
+        LPAD('DISCOUNT', 12) ||
+        LPAD('SELLING_PRICE', 16)
+    );
+
+    DBMS_OUTPUT.PUT_LINE(RPAD('-', 96, '-'));
+
+    OPEN C_BOOK;
+    LOOP
+        FETCH C_BOOK INTO
+            V_BOOK_CODE,
+            V_BOOK_AUTHOR,
+            V_BOOK_TITLE,
+            V_BOOK_CATEGORY,
+            V_BOOK_PRICE;
+        EXIT WHEN C_BOOK%NOTFOUND;
+
+        IF UPPER(V_BOOK_CATEGORY) = 'COMPUTER' THEN
+            V_DISCOUNT := V_BOOK_PRICE * 0.15;
+        ELSIF UPPER(V_BOOK_CATEGORY) = 'SCIENCE' THEN
+            V_DISCOUNT := V_BOOK_PRICE * 0.10;
+        ELSIF UPPER(V_BOOK_CATEGORY) = 'APTITUDE' THEN
+            V_DISCOUNT := V_BOOK_PRICE * 0.08;
+        ELSIF UPPER(V_BOOK_CATEGORY) = 'FICTION' THEN
+            V_DISCOUNT := V_BOOK_PRICE * 0.05;
+        ELSE
+            V_DISCOUNT := 0;
+        END IF;
+
+        V_SELLING_PRICE := V_BOOK_PRICE - V_DISCOUNT;
+
+        DBMS_OUTPUT.PUT_LINE(
+            RPAD(V_BOOK_CODE, 6) ||
+            RPAD(V_BOOK_AUTHOR, 18) ||
+            RPAD(V_BOOK_TITLE, 20) ||
+            RPAD(V_BOOK_CATEGORY, 14) ||
+            LPAD(TO_CHAR(V_BOOK_PRICE, '9990.99'), 10) ||
+            LPAD(TO_CHAR(V_DISCOUNT, '9990.99'), 12) ||
+            LPAD(TO_CHAR(V_SELLING_PRICE, '9990.99'), 16)
+        );
+    END LOOP;
+    
+    CLOSE C_BOOK;
+    DBMS_OUTPUT.PUT_LINE(RPAD('-', 96, '-'));
+END;
+/
